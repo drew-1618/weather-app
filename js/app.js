@@ -3,13 +3,38 @@ const strParams = '?latitude=36.17&longitude=-85.5&daily=sunrise,sunset,temperat
 
 
 function getWeatherIcon(weatherCode, isDay) {
-    if (weatherCode === 0 && isDay === 1) {
-        return "bi-brightness-high-fill"
+    // clear
+    if (weatherCode === 0) {
+        return isDay ? "bi-brightness-high-fill" : "bi-moon-stars-fill"
     }
-    else if (weatherCode === 0 && isDay === 0) {
-        return "bi-moon-stars-fill"
+    
+    // overcast
+    if (weatherCode >= 1 && weatherCode <= 3) {
+        if (weatherCode === 3) {
+            return "bi-cloudy-fill"
+        }
+        return isDay ? "bi-cloud-sun-fill" : "bi-cloud-moon-fill"
     }
-    return "bi-cloud"   // default
+
+    // fog
+    if (weatherCode === 45 || weatherCode === 48) {
+        return "bi-cloud-fog-fill"
+    }
+
+    // drizzle and rain
+    if ((weatherCode >= 51 && weatherCode <= 67) || (weatherCode >= 80 && weatherCode <= 82)) {
+        return "bi-cloud-rain-heavy-fill"
+    }
+
+    // snow
+    if (weatherCode >= 71 && weatherCode <= 77) {
+        return "bi-snow"
+    }
+
+    // storm
+    if (weatherCode >= 95) {
+        return "bi-cloud-lightning-rain-fill"
+    }
 }
 
 
@@ -46,21 +71,21 @@ getWeatherData()
 
 
 
-document.querySelector('#btnTest').addEventListener('click', () => {
-    fetch(strBaseApiUrl + strParams)
-    .then(result => {
-        if (result.ok) {
-            return result.json()
-        }
-        else {
-            throw new Error(result.status)
-        }
-    })
-    .then(data => {
-        console.log("Full Data: ", data)
-        const floatCurrentTemp = data.current.temperature_2m
-        console.log("Current temperature is: " + floatCurrentTemp)
+// document.querySelector('#btnTest').addEventListener('click', () => {
+//     fetch(strBaseApiUrl + strParams)
+//     .then(result => {
+//         if (result.ok) {
+//             return result.json()
+//         }
+//         else {
+//             throw new Error(result.status)
+//         }
+//     })
+//     .then(data => {
+//         console.log("Full Data: ", data)
+//         const floatCurrentTemp = data.current.temperature_2m
+//         console.log("Current temperature is: " + floatCurrentTemp)
 
-        document.getElementById("txtTest").innerHTML = "Current Temp: " + floatCurrentTemp
-    })
-})
+//         document.getElementById("txtTest").innerHTML = "Current Temp: " + floatCurrentTemp
+//     })
+// })
