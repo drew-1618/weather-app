@@ -50,42 +50,21 @@ async function getWeatherData() {
         const result = await response.json()
         // for reference
         console.log(result)
+        const current = result.current
 
-        const currentTemp = result.current.temperature_2m
-        const currentHumidity = result.current.relative_humidity_2m
-        const weatherCode = result.current.weather_code
-        const isDay = result.current.is_day
+        // update current temp
+        document.getElementById('txtCurrentTemp').innerText = `${Math.round(current.temperature_2m)} °F`
+        // update current humidity
+        document.getElementById('txtCurrentHumidity').innerText = `Humidity: ${current.relative_humidity_2m}%`
 
         // update weather icon
-        const txtIconClass = getWeatherIcon(weatherCode, isDay)
-        document.getElementById('txtWeatherIcon').className = "bi " + txtIconClass
+        const strIconClass = getWeatherIcon(current.weather_code, current.is_day)
+        document.getElementById('txtWeatherIcon').className = "bi " + strIconClass
 
     }
     catch (error) {
-        console.error(error.message)
+        console.error("Error fetching weather: ", error)
     }
 }
 
 getWeatherData()
-
-
-
-
-// document.querySelector('#btnTest').addEventListener('click', () => {
-//     fetch(strBaseApiUrl + strParams)
-//     .then(result => {
-//         if (result.ok) {
-//             return result.json()
-//         }
-//         else {
-//             throw new Error(result.status)
-//         }
-//     })
-//     .then(data => {
-//         console.log("Full Data: ", data)
-//         const floatCurrentTemp = data.current.temperature_2m
-//         console.log("Current temperature is: " + floatCurrentTemp)
-
-//         document.getElementById("txtTest").innerHTML = "Current Temp: " + floatCurrentTemp
-//     })
-// })
