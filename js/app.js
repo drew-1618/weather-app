@@ -1,6 +1,57 @@
 const strBaseApiUrl = 'https://api.open-meteo.com/v1/forecast'
 const strParams = '?latitude=36.17&longitude=-85.5&daily=sunrise,sunset,temperature_2m_max,temperature_2m_min,weather_code,daylight_duration,sunshine_duration,apparent_temperature_max,apparent_temperature_min,wind_speed_10m_max,wind_gusts_10m_max&hourly=temperature_2m,apparent_temperature,weather_code,is_day,precipitation_probability,precipitation,visibility,wind_speed_10m,uv_index&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_direction_10m,wind_speed_10m&timezone=America%2FChicago&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch'
 
+// get data
+async function getWeatherData() {
+    try {
+        const response = await fetch(strBaseApiUrl+strParams)
+        const data = await response.json()
+        console.log(data)
+        // updates
+        updateCurrentWeather(data.current)
+        updateForecast(data.daily)
+    } catch (error) {
+        console.error("Error fetching weather: ", error)
+        
+    }
+}
+
+function updateCurrentWeather(current) {
+    // update current temp
+    document.getElementById('txtCurrentTemp').innerText = `${Math.round(current.temperature_2m)} °F`
+    // update current humidity
+    document.getElementById('txtCurrentHumidity').innerText = `Humidity: ${current.relative_humidity_2m}%`
+    // update weather icon
+    const strIconClass = getWeatherIcon(current.weather_code, current.is_day)
+    document.getElementById('txtWeatherIcon').className = "bi " + strIconClass
+}
+
+function updateForecast(daily) {
+    const forecastRow = document.getElementById('forecastRow')
+    forecastRow.innerHTML = ''
+
+    daily.time.forEach((strDate, i) => {
+        const strIconClass = getWeatherIcon(daily.weather_code[i], 1)   // since dealing with whole days, assume is_day = 1
+        // show "today" or day of the week in forecast
+        const strDayName = i === 0 ? "Today" : new Date(strDate + 'T00:00').toLocaleDateString('en-US', {weekday: 'short'})
+        forecastRow.innerHTML += `
+            <div class="col-11 mb-2">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body d-flex align-items-center justify-content-between py-2">
+                        <div style="width: 100px;" class="fw-bold">${strDayName}</div>
+                        <div class="fs-4 text-secondary">
+                            <i class="bi ${strIconClass}"></i>
+                        </div>
+                        <div class="text-end">
+                            <span><strong>H: ${Math.round(daily.temperature_2m_max[i])}°</strong> | <span class="text-muted">L: ${Math.round(daily.temperature_2m_min[i])}°</span></span>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `
+    })
+}
 
 function getWeatherIcon(weatherCode, isDay) {
     // clear
@@ -37,34 +88,10 @@ function getWeatherIcon(weatherCode, isDay) {
     }
 }
 
-
-
-// get data
-async function getWeatherData() {
-    try {
-        const response = await fetch(strBaseApiUrl+strParams)
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`)
-        }
-
-        const result = await response.json()
-        // for reference
-        console.log(result)
-        const current = result.current
-
-        // update current temp
-        document.getElementById('txtCurrentTemp').innerText = `${Math.round(current.temperature_2m)} °F`
-        // update current humidity
-        document.getElementById('txtCurrentHumidity').innerText = `Humidity: ${current.relative_humidity_2m}%`
-
-        // update weather icon
-        const strIconClass = getWeatherIcon(current.weather_code, current.is_day)
-        document.getElementById('txtWeatherIcon').className = "bi " + strIconClass
-
-    }
-    catch (error) {
-        console.error("Error fetching weather: ", error)
-    }
-}
-
 getWeatherData()
+
+/*
+AI Usage:
+    - Logic to convert time to day of the week name in updateForecast()
+    - 
+*/
