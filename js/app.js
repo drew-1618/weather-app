@@ -13,7 +13,7 @@ async function getWeatherData() {
         // updates
         updateCurrentWeather(data.current)
         updateForecast(data.daily)
-        document.getElementById('txtLastUpdated').innerText = `Last updated: ${strTime}`
+        document.getElementById('txtLastUpdated').innerHTML = `<i class="bi bi-clock-fill text-primary"></i> Last updated: ${strTime}`
     } catch (error) {
         console.error("Error fetching weather: ", error)
         
@@ -22,9 +22,9 @@ async function getWeatherData() {
 
 function updateCurrentWeather(current) {
     // update current temp
-    document.getElementById('txtCurrentTemp').innerText = `${Math.round(current.temperature_2m)} °F`
+    document.getElementById('txtCurrentTemp').innerHTML = `<i class="bi bi-thermometer-half text-warning"></i> ${Math.round(current.temperature_2m)} °F`
     // update current humidity
-    document.getElementById('txtCurrentHumidity').innerText = `Humidity: ${current.relative_humidity_2m}%`
+    document.getElementById('txtCurrentHumidity').innerHTML = `<i class="bi bi-droplet-half text-info"></i> Humidity: ${current.relative_humidity_2m}%`
     // update weather icon
     const strIconClass = getWeatherIcon(current.weather_code, current.is_day)
     document.getElementById('txtWeatherIcon').className = "bi " + strIconClass
