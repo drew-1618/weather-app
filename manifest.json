@@ -1,0 +1,15 @@
+{
+  "short_name": "Weather",
+  "name": "Cookeville Weather App",
+  "icons": [
+  {
+    "src": "images/icon.png",
+    "sizes": "192x192 512x512",
+    "type": "image/png"
+  }
+],
+  "start_url": "./index.html",
+  "background_color": "#2c3e50",
+  "display": "standalone",
+  "theme_color": "#2c3e50"
+}
