@@ -7,6 +7,7 @@ async function getWeatherData() {
         const response = await fetch(strBaseApiUrl+strParams)
         const data = await response.json()
         console.log(data)
+        // to view when the data being displayed was last fetched
         const now = new Date()
         const strTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         // updates
@@ -46,7 +47,7 @@ function updateForecast(daily) {
                             <i class="bi ${strIconClass}"></i>
                         </div>
                         <div class="text-end">
-                            <span><strong>H: ${Math.round(daily.temperature_2m_max[i])}°</strong>   <span class="opacity-75">L: ${Math.round(daily.temperature_2m_min[i])}°</span></span>
+                            <span><span class="opacity-75">L: ${Math.round(daily.temperature_2m_min[i])}°</span> <strong>H: ${Math.round(daily.temperature_2m_max[i])}°</strong></span>
 
                         </div>
                     </div>
