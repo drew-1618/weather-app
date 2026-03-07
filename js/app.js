@@ -1,24 +1,21 @@
 const strBaseApiUrl = 'https://api.open-meteo.com/v1/forecast'
 const strParams = '?latitude=36.17&longitude=-85.5&daily=sunrise,sunset,temperature_2m_max,temperature_2m_min,weather_code,daylight_duration,sunshine_duration,apparent_temperature_max,apparent_temperature_min,wind_speed_10m_max,wind_gusts_10m_max&hourly=temperature_2m,apparent_temperature,weather_code,is_day,precipitation_probability,precipitation,visibility,wind_speed_10m,uv_index&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_direction_10m,wind_speed_10m&timezone=America%2FChicago&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch'
 
+// initialize empty global variable for last time data was fetched from API
+let lastFetchedTime
+
 // get data
 async function getWeatherData() {
     try {
-        const response = await fetch(strBaseApiUrl+strParams)
+        const response = await fetch(strBaseApiUrl + strParams)
         const data = await response.json()
+        // get current time
+        lastFetchedTime = new Date()
         console.log(data)
-        // to view when the data being displayed was last fetched
-        // if time last updated is current time, say just now
-        const now = new Date()
-        // current time from the data
-        const dataTime = new Date(data.current.time)
-        // check hour and minute
-        const boolIsJustNow = now.getHours === dataTime.getHours && now.getMinutes === dataTime.getMinutes
-        const strTime = boolIsJustNow ? "Just now": now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         // updates
+        updateLastUpdated()
         updateCurrentWeather(data.current)
         updateForecast(data.daily)
-        document.getElementById('txtLastUpdated').innerHTML = `<i class="bi bi-clock-fill text-primary"></i> Last updated: ${strTime}`
     } catch (error) {
         console.error("Error fetching weather: ", error)
         
@@ -62,6 +59,18 @@ function updateForecast(daily) {
     })
 }
 
+function updateLastUpdated() {
+    const now = new Date()
+    // difference between current time and last fetched time in seconds
+    const intTimeDifference = Math.floor((now - lastFetchedTime) / 1000)
+
+    // display 'Just now' if the data was fetched within the last 60 seconds
+    const strTime = (intTimeDifference < 60) ? "Just now": lastFetchedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    // update the HTML
+    document.getElementById('txtLastUpdated').innerHTML = `<i class="bi bi-clock-fill text-primary"></i> Last updated: ${strTime}`
+    
+}
+
 function getWeatherIcon(weatherCode, isDay) {
     // clear
     if (weatherCode === 0) {
@@ -97,7 +106,12 @@ function getWeatherIcon(weatherCode, isDay) {
     }
 }
 
+// initially get weather data
 getWeatherData()
+// then get weather data every 5 minutes
+setInterval(getWeatherData, 300000)
+// update lastUpdated separately to show difference
+setInterval(updateLastUpdated, 1000)
 
 document.querySelector('#btnRefresh').addEventListener('click', () => {
     getWeatherData()
