@@ -46,7 +46,7 @@ function updateForecast(daily) {
                             <i class="bi ${strIconClass}"></i>
                         </div>
                         <div class="text-end">
-                            <span><strong>H: ${Math.round(daily.temperature_2m_max[i])}°</strong>   <span class="text-muted">L: ${Math.round(daily.temperature_2m_min[i])}°</span></span>
+                            <span><strong>H: ${Math.round(daily.temperature_2m_max[i])}°</strong>   <span class="opacity-75">L: ${Math.round(daily.temperature_2m_min[i])}°</span></span>
 
                         </div>
                     </div>
