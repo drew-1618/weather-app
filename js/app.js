@@ -7,9 +7,12 @@ async function getWeatherData() {
         const response = await fetch(strBaseApiUrl+strParams)
         const data = await response.json()
         console.log(data)
+        const now = new Date()
+        const strTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         // updates
         updateCurrentWeather(data.current)
         updateForecast(data.daily)
+        document.getElementById('txtLastUpdated').innerText = `Last updated: ${strTime}`
     } catch (error) {
         console.error("Error fetching weather: ", error)
         
@@ -35,15 +38,15 @@ function updateForecast(daily) {
         // show "today" or day of the week in forecast
         const strDayName = i === 0 ? "Today" : new Date(strDate + 'T00:00').toLocaleDateString('en-US', {weekday: 'short'})
         forecastRow.innerHTML += `
-            <div class="col-11 mb-2">
+            <div class="col-12 mb-2">
                 <div class="card shadow-sm border-0">
                     <div class="card-body d-flex align-items-center justify-content-between py-2">
-                        <div style="width: 100px;" class="fw-bold">${strDayName}</div>
+                        <div style="width: 100px;" class="fw-bold text-start">${strDayName}</div>
                         <div class="fs-4 text-secondary">
                             <i class="bi ${strIconClass}"></i>
                         </div>
                         <div class="text-end">
-                            <span><strong>H: ${Math.round(daily.temperature_2m_max[i])}°</strong> | <span class="text-muted">L: ${Math.round(daily.temperature_2m_min[i])}°</span></span>
+                            <span><strong>H: ${Math.round(daily.temperature_2m_max[i])}°</strong>   <span class="text-muted">L: ${Math.round(daily.temperature_2m_min[i])}°</span></span>
 
                         </div>
                     </div>
@@ -89,6 +92,10 @@ function getWeatherIcon(weatherCode, isDay) {
 }
 
 getWeatherData()
+
+document.querySelector('#btnRefresh').addEventListener('click', () => {
+    getWeatherData()
+})
 
 /*
 AI Usage:

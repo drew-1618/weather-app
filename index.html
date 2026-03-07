@@ -1,7 +1,7 @@
 <!-- https://api.open-meteo.com/v1/forecast?latitude=36.17&longitude=-85.5&daily=sunrise,sunset,temperature_2m_max,temperature_2m_min,weather_code,daylight_duration,sunshine_duration,apparent_temperature_max,apparent_temperature_min,wind_speed_10m_max,wind_gusts_10m_max&hourly=temperature_2m,apparent_temperature,weather_code,is_day,precipitation_probability,precipitation,visibility,wind_speed_10m,uv_index&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_direction_10m,wind_speed_10m&timezone=America%2FChicago&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch -->
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
    <head>
     <meta charset="UTF-8">
@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     </head>
 </head>
-<body>
+<body class="dark">
     <!-- current weather card -->
     <div class="container mt-5">
         <div class="card mx-auto text-center shadow">
@@ -30,7 +30,7 @@
                 </div>
                 <h2 class="display-4 fw-bold" id="txtCurrentTemp">--°F</h2>
                 <p class="card-text text-secondary" id="txtCurrentHumidity">Humidity: --%</p>
-                
+                <p class="text-secondary small" id="txtLastUpdated">Last updated: --:--</p>
                 <button class="btn btn-primary w-100" id="btnRefresh">Refresh Weather</button>
             </div>
         </div>
