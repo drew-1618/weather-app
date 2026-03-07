@@ -8,8 +8,13 @@ async function getWeatherData() {
         const data = await response.json()
         console.log(data)
         // to view when the data being displayed was last fetched
+        // if time last updated is current time, say just now
         const now = new Date()
-        const strTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        // current time from the data
+        const dataTime = new Date(data.current.time)
+        // check hour and minute
+        const boolIsJustNow = now.getHours === dataTime.getHours && now.getMinutes === dataTime.getMinutes
+        const strTime = boolIsJustNow ? "Just now": now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         // updates
         updateCurrentWeather(data.current)
         updateForecast(data.daily)
