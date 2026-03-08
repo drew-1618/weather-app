@@ -54,9 +54,9 @@ function updateForecast(daily) {
         const strDayName = i === 0 ? "Today" : new Date(strDate + 'T00:00').toLocaleDateString('en-US', {weekday: 'short'})
         forecastRow.innerHTML += `
             <div class="col-12 mb-2">
-                <div class="card shadow-sm border-0">
+                <div class="card shadow-sm">
                     <div class="card-body d-flex align-items-center justify-content-between py-2">
-                        <div style="width: 100px;" class="fw-bold text-start">${strDayName}</div>
+                        <div class="fw-bold text-start">${strDayName}</div>
                         <div class="fs-4 text-secondary">
                             <i class="bi ${strIconClass}"></i>
                         </div>
@@ -88,6 +88,8 @@ function updateHourlyForecast(hourly) {
 
     // find the current hour to know where the 24 hour prediction should start
     const now = new Date()
+    // round the time down to a minute for consistent comparisons
+    now.setMinutes(0, 0, 0)
     // find the current index
     let intStartIndex = 0
     for (let i = 0; i < hourly.time.length; i++) {
@@ -110,7 +112,7 @@ function updateHourlyForecast(hourly) {
         const strIconClass = getWeatherIconAndUpdateDescription(hourly.weather_code[i], boolIsDay)
 
         // get the hour or Now (when we are looking at the first index of the arr)
-        const strHour = i === 0 ? "Now" : time.toLocaleTimeString([], {hour: 'numeric'})
+        const strHour = i === intStartIndex ? "Now" : time.toLocaleTimeString([], {hour: 'numeric'})
 
         hourlyForecast.innerHTML += `
             <div class="flex-shrink-0 text-center">
