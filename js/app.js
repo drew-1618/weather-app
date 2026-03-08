@@ -33,7 +33,7 @@ function updateCurrentWeather(current) {
 }
 
 function updateForecast(daily) {
-    const forecastRow = document.getElementById('forecastRow')
+    const forecastRow = document.getElementById('divForecastRow')
     forecastRow.innerHTML = ''
 
     daily.time.forEach((strDate, i) => {
