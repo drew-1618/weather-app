@@ -25,6 +25,7 @@
                     <i id="txtWeatherIcon" class="bi"></i>
                 </div>
                 <h2 class="display-4 fw-bold" id="txtCurrentTemp"><i class="bi bi-thermometer-half text-warning"></i> --°F</h2>
+                <h5 class="text-muted" id="txtCurrentFeelsLike">Feels like: --°F</h5>
                 <p class="card-text text-secondary" id="txtCurrentHumidity"><i class="bi bi-droplet-half"></i> Humidity: --%</p>
                 <p class="text-secondary small" id="txtLastUpdated"><i class="bi bi-clock-fill text-primary"></i> Last updated: --:--</p>
                 <button class="btn btn-primary w-100" id="btnRefresh">Refresh Weather</button>
@@ -34,12 +35,11 @@
     
     <!-- hourly forecast card -->
      <div class="container-fluid mt-3">
-        <div id="divHourlyForecast" class="">
-            <div class="row align-items-start">
-                <div class="card-body">
-                    <div class="col">
-                    Hourly weather
-                    </div>
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title fw-bold mb-3">Hourly Forecast</h6>
+                <div id="divHourlyForecast" class="hourly-container d-flex flex-nowrap">
+
                 </div>
             </div>
         </div>

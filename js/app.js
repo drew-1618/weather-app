@@ -25,6 +25,8 @@ async function getWeatherData() {
 function updateCurrentWeather(current) {
     // update current temp
     document.getElementById('txtCurrentTemp').innerHTML = `<i class="bi bi-thermometer-half text-warning"></i> ${Math.round(current.temperature_2m)} °F`
+    // update apparent temp
+    document.getElementById('txtCurrentFeelsLike').innerHTML = `Feels like: ${Math.round(current.apparent_temperature)} °F`
     // update current humidity
     document.getElementById('txtCurrentHumidity').innerHTML = `<i class="bi bi-droplet-half text-info"></i> Humidity: ${current.relative_humidity_2m}%`
     // update weather icon
@@ -68,8 +70,11 @@ function updateLastUpdated() {
     const strTime = (intTimeDifference < 60) ? "Just now": lastFetchedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     // update the HTML
     document.getElementById('txtLastUpdated').innerHTML = `<i class="bi bi-clock-fill text-primary"></i> Last updated: ${strTime}`
-    
 }
+
+// function updateHourlyForecast() {
+//     const 
+// }
 
 function getWeatherIcon(weatherCode, isDay) {
     // clear
