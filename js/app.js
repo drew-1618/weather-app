@@ -24,9 +24,18 @@ async function getWeatherData() {
 
 function updateCurrentWeather(current) {
     // update current temp
-    document.getElementById('txtCurrentTemp').innerHTML = `<i class="bi bi-thermometer-half text-warning"></i> ${Math.round(current.temperature_2m)} °F`
+    const intCurrentTemp = Math.round(current.temperature_2m)
+    document.getElementById('txtCurrentTemp').innerHTML = `<i class="bi bi-thermometer-half text-warning"></i> ${intCurrentTemp}°F`
     // update apparent temp
-    document.getElementById('txtCurrentFeelsLike').innerHTML = `Feels like: ${Math.round(current.apparent_temperature)} °F`
+    const intCurrentFeelsLike = Math.round(current.apparent_temperature)
+    // only show feels like temp if it differs from actual temp
+    if (intCurrentFeelsLike != intCurrentTemp) {
+        document.getElementById('txtCurrentFeelsLike').innerHTML = `Feels like: ${intCurrentFeelsLike}°F`
+        document.getElementById('txtCurrentFeelsLike').classList.remove('d-none')
+    } else {
+        // hide it again on refresh if they are equal
+        document.getElementById('txtCurrentFeelsLike').classList.add('d-none')
+    }
     // update current humidity
     document.getElementById('txtCurrentHumidity').innerHTML = `<i class="bi bi-droplet-half text-info"></i> Humidity: ${current.relative_humidity_2m}%`
     // update weather icon
