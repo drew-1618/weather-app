@@ -16,9 +16,9 @@ async function getWeatherData() {
         updateLastUpdated()
         updateCurrentWeather(data.current)
         updateForecast(data.daily)
+        updateHourlyForecast(data.hourly)
     } catch (error) {
         console.error("Error fetching weather: ", error)
-        
     }
 }
 
@@ -48,7 +48,8 @@ function updateForecast(daily) {
     forecastRow.innerHTML = ''
 
     daily.time.forEach((strDate, i) => {
-        const strIconClass = getWeatherIcon(daily.weather_code[i], 1)   // since dealing with whole days, assume is_day = 1
+        // since dealing with whole days, assume is_day = 1
+        const strIconClass = getWeatherIcon(daily.weather_code[i], 1)
         // show "today" or day of the week in forecast
         const strDayName = i === 0 ? "Today" : new Date(strDate + 'T00:00').toLocaleDateString('en-US', {weekday: 'short'})
         forecastRow.innerHTML += `
@@ -81,9 +82,47 @@ function updateLastUpdated() {
     document.getElementById('txtLastUpdated').innerHTML = `<i class="bi bi-clock-fill text-primary"></i> Last updated: ${strTime}`
 }
 
-// function updateHourlyForecast() {
-//     const 
-// }
+function updateHourlyForecast(hourly) {
+    const hourlyForecast = document.getElementById('divHourlyForecast')
+    hourlyForecast.innerHTML = ''
+
+    // find the current hour to know where the 24 hour prediction should start
+    const now = new Date()
+    // find the current index
+    let intStartIndex = 0
+    for (let i = 0; i < hourly.time.length; i++) {
+        // get time from API as string
+        let strTime = hourly.time[i]
+        // convert time into Date object
+        let objTime = new Date(strTime)
+        if (objTime >= now) {
+            // save the current index 
+            intStartIndex = i
+            break
+        }
+    }
+
+    // loop through the next 24 hours
+    for (let i = intStartIndex; i < 24 + intStartIndex; i++) {
+        const time = new Date(hourly.time[i])
+        const intTemp = Math.round(hourly.temperature_2m[i])
+        const boolIsDay = hourly.is_day[i]
+        const strIconClass = getWeatherIcon(hourly.weather_code[i], boolIsDay)
+
+        // get the hour or Now (when we are looking at the first index of the arr)
+        const strHour = i === 0 ? "Now" : time.toLocaleTimeString([], {hour: 'numeric'})
+
+        hourlyForecast.innerHTML += `
+            <div class="flex-shrink-0 text-center">
+                <div class="small text-muted mb-1">${strHour}</div>
+                <div class="fs-4 text-secondary mb-1">
+                    <i class="bi ${strIconClass}"></i>
+                </div>
+                <div class="fw-bold">${intTemp}°</div>
+            </div>
+        `
+    }
+}
 
 function getWeatherIcon(weatherCode, isDay) {
     // clear
@@ -135,7 +174,7 @@ document.querySelector('#btnRefresh').addEventListener('click', () => {
 })
 
 /*
-AI Usage:
+AI Usage: Gemini via Google search response
     - Logic to convert time to day of the week name in updateForecast()
-    - 
+    - Logic to format the time to an hour (like 1 PM) in updateHourlyForecast()
 */
