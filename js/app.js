@@ -39,7 +39,7 @@ function updateCurrentWeather(current) {
     // update current humidity
     document.getElementById('txtCurrentHumidity').innerHTML = `<i class="bi bi-droplet-half text-info"></i> Humidity: ${current.relative_humidity_2m}%`
     // update weather icon
-    const strIconClass = getWeatherIcon(current.weather_code, current.is_day)
+    const strIconClass = getWeatherIconAndUpdateDescription(current.weather_code, current.is_day)
     document.getElementById('txtWeatherIcon').className = "bi " + strIconClass
 }
 
@@ -49,7 +49,7 @@ function updateForecast(daily) {
 
     daily.time.forEach((strDate, i) => {
         // since dealing with whole days, assume is_day = 1
-        const strIconClass = getWeatherIcon(daily.weather_code[i], 1)
+        const strIconClass = getWeatherIconAndUpdateDescription(daily.weather_code[i], 1)
         // show "today" or day of the week in forecast
         const strDayName = i === 0 ? "Today" : new Date(strDate + 'T00:00').toLocaleDateString('en-US', {weekday: 'short'})
         forecastRow.innerHTML += `
@@ -107,7 +107,7 @@ function updateHourlyForecast(hourly) {
         const time = new Date(hourly.time[i])
         const intTemp = Math.round(hourly.temperature_2m[i])
         const boolIsDay = hourly.is_day[i]
-        const strIconClass = getWeatherIcon(hourly.weather_code[i], boolIsDay)
+        const strIconClass = getWeatherIconAndUpdateDescription(hourly.weather_code[i], boolIsDay)
 
         // get the hour or Now (when we are looking at the first index of the arr)
         const strHour = i === 0 ? "Now" : time.toLocaleTimeString([], {hour: 'numeric'})
@@ -124,37 +124,44 @@ function updateHourlyForecast(hourly) {
     }
 }
 
-function getWeatherIcon(weatherCode, isDay) {
+function getWeatherIconAndUpdateDescription(weatherCode, isDay) {
     // clear
-    if (weatherCode === 0) {
+    if (weatherCode == 0) {
+        document.getElementById('txtWeatherDescription').innerText = "Clear"
         return isDay ? "bi-brightness-high-fill" : "bi-moon-stars-fill"
     }
     
     // overcast
     if (weatherCode >= 1 && weatherCode <= 3) {
-        if (weatherCode === 3) {
+        if (weatherCode == 3) {
+            document.getElementById('txtWeatherDescription').innerText = "Cloudy"
             return "bi-cloudy-fill"
         }
+        document.getElementById('txtWeatherDescription').innerText = "Partly Cloudy"
         return isDay ? "bi-cloud-sun-fill" : "bi-cloud-moon-fill"
     }
 
     // fog
-    if (weatherCode === 45 || weatherCode === 48) {
+    if (weatherCode == 45 || weatherCode == 48) {
+        document.getElementById('txtWeatherDescription').innerText = "Fog"
         return "bi-cloud-fog-fill"
     }
 
     // drizzle and rain
     if ((weatherCode >= 51 && weatherCode <= 67) || (weatherCode >= 80 && weatherCode <= 82)) {
+        document.getElementById('txtWeatherDescription').innerText = "Rain"
         return "bi-cloud-rain-heavy-fill"
     }
 
     // snow
     if (weatherCode >= 71 && weatherCode <= 77) {
+        document.getElementById('txtWeatherDescription').innerText = "Snow"
         return "bi-snow"
     }
 
     // storm
     if (weatherCode >= 95) {
+        document.getElementById('txtWeatherDescription').innerText = "Storm"
         return "bi-cloud-lightning-rain-fill"
     }
 
