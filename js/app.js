@@ -184,6 +184,6 @@ document.querySelector('#btnRefresh').addEventListener('click', () => {
 
 /*
 AI Usage: Gemini via Google search response
-    - Logic to convert time to day of the week name in updateForecast()
-    - Logic to format the time to an hour (like 1 PM) in updateHourlyForecast()
+    - Trouble shooting logic to convert time to day of the week name in updateForecast()
+    - Trouble shooting logic to format the time to an hour (like 1 PM) in updateHourlyForecast()
 */
