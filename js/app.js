@@ -104,6 +104,9 @@ function getWeatherIcon(weatherCode, isDay) {
     if (weatherCode >= 95) {
         return "bi-cloud-lightning-rain-fill"
     }
+
+    // default if no matches
+    return "bi-cloudy-fill"
 }
 
 // initially get weather data
